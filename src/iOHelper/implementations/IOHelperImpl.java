@@ -11,18 +11,13 @@ public class IOHelperImpl implements IOHelper {
     private static final int BUFFER_SIZE = 1024;
 
     public long copy(InputStream in, OutputStream out) throws IOException {
-        BufferedInputStream bin = new BufferedInputStream(in);
-        BufferedOutputStream bout = new BufferedOutputStream(out);
-        // оставил всё как есть, потому что надо вернуть количество скопированных байт
-
         if (in != null && in.available() > 0) {
-            int b;
-            long i = 0l;
-            while ((b = bin.read()) > -1) {
-                bout.write(b);
-                i++;
-            }
-            out.flush();
+            BufferedInputStream bin = new BufferedInputStream(in);
+            BufferedOutputStream bout = new BufferedOutputStream(out);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            long i = (long) bin.read(buffer);
+            bout.write(buffer);
+            bout.flush();
             return i;
         }
         return 0l;
@@ -34,11 +29,10 @@ public class IOHelperImpl implements IOHelper {
         try {
             inStream = new FileInputStream(source);
             outStream = new FileOutputStream(target);
-            long i = 0l;
-            while (inStream.available() != 0) {
-                outStream.write(inStream.read());
-                i++;
-            }
+            byte[] buffer = new byte[BUFFER_SIZE];
+            long i = (long) inStream.read(buffer);
+            outStream.write(buffer);
+            outStream.flush();
             return i;
         } catch (IOException e) {
             e.printStackTrace();
