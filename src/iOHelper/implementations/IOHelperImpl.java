@@ -8,18 +8,24 @@ import java.io.*;
  * Created by root on 20.09.16.
  */
 public class IOHelperImpl implements IOHelper {
+    private static final int BUFFER_SIZE = 1024;
 
     public long copy(InputStream in, OutputStream out) throws IOException {
+        BufferedInputStream bin = new BufferedInputStream(in);
+        BufferedOutputStream bout = new BufferedOutputStream(out);
+        // оставил всё как есть, потому что надо вернуть количество скопированных байт
+
         if (in != null && in.available() > 0) {
-            int b, i = 0;
-            while ((b = in.read()) > -1) {
-                out.write(b);
+            int b;
+            long i = 0l;
+            while ((b = bin.read()) > -1) {
+                bout.write(b);
                 i++;
             }
             out.flush();
             return i;
         }
-        return 0;
+        return 0l;
     }
 
     public long copy(File source, File target) {
@@ -28,7 +34,7 @@ public class IOHelperImpl implements IOHelper {
         try {
             inStream = new FileInputStream(source);
             outStream = new FileOutputStream(target);
-            int i = 0;
+            long i = 0l;
             while (inStream.available() != 0) {
                 outStream.write(inStream.read());
                 i++;
@@ -46,7 +52,7 @@ public class IOHelperImpl implements IOHelper {
             } catch (Exception e) {
             }
         }
-        return 0;
+        return 0l;
     }
 
     public String readFile(File file) {
@@ -54,10 +60,12 @@ public class IOHelperImpl implements IOHelper {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-            int s = reader.read();
-            while (s != -1) {
-                result += (char) s;
-                s = reader.read();
+            char[] chars = new char[BUFFER_SIZE];
+            reader.read(chars);
+            int i = 0;
+            while (chars[i] != 0) {
+                result += chars[i];
+                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,10 +83,12 @@ public class IOHelperImpl implements IOHelper {
         BufferedReader reader = null;
         try {
             reader =new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
-            int s = reader.read();
-            while (s != -1) {
-                result += (char) s;
-                s = reader.read();
+            char[] chars = new char[BUFFER_SIZE];
+            reader.read(chars);
+            int i = 0;
+            while (chars[i] != 0) {
+                result += chars[i];
+                i++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
