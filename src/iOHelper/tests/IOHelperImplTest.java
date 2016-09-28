@@ -14,7 +14,8 @@ import static junit.framework.Assert.assertNotNull;
 public class IOHelperImplTest {
     private static final String ENCODING = "UTF-8";
     private static final String FILE1 = "/home/aisalin/Документы/file",
-    FILE2 = "/home/aisalin/Документы/file2", FILE3 = "/home/aisalin/Документы/file3";
+            FILE2 = "/home/aisalin/Документы/file2",
+            FILE3 = "/home/aisalin/Документы/file3";
     private static final String CONTENT = "fail3 is filled\n";
 
     private IOHelperImpl ioHelperImpl = new IOHelperImpl();
@@ -53,14 +54,14 @@ public class IOHelperImplTest {
     @Test
     public void readFile() {
         File file = new File(FILE1);
-        String str = "Привет мир!";
+        String str = "Привет мир!\n";
         assertEquals(str, ioHelperImpl.readFile(file));
     }
 
     @Test
     public void readFileWithEncoding() {
         File file1 = new File(FILE1);
-        String  str = "Привет мир!";
+        String  str = "Привет мир!\n";
         assertEquals(str, ioHelperImpl.readFile(file1, ENCODING));
     }
 

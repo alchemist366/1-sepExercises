@@ -15,10 +15,13 @@ public class IOHelperImpl implements IOHelper {
             BufferedInputStream bin = new BufferedInputStream(in);
             BufferedOutputStream bout = new BufferedOutputStream(out);
             byte[] buffer = new byte[BUFFER_SIZE];
-            long i = (long) bin.read(buffer);
-            bout.write(buffer);
+            long i , result = 0l;
+            while ((i = (long) bin.read(buffer)) != -1) {
+                bout.write(buffer);
+                result += i;
+            }
             bout.flush();
-            return i;
+            return result;
         }
         return 0l;
     }
@@ -30,10 +33,13 @@ public class IOHelperImpl implements IOHelper {
             inStream = new FileInputStream(source);
             outStream = new FileOutputStream(target);
             byte[] buffer = new byte[BUFFER_SIZE];
-            long i = (long) inStream.read(buffer);
-            outStream.write(buffer);
+            long i , result = 0l;
+            while ((i = (long) inStream.read(buffer)) != -1) {
+                outStream.write(buffer);
+                result += i;
+            }
             outStream.flush();
-            return i;
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -55,11 +61,9 @@ public class IOHelperImpl implements IOHelper {
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             char[] chars = new char[BUFFER_SIZE];
-            reader.read(chars);
-            int i = 0;
-            while (chars[i] != 0) {
-                result += chars[i];
-                i++;
+            int i;
+            while ((i = reader.read(chars)) != -1) {
+                result += new String(chars, 0, i);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,11 +82,9 @@ public class IOHelperImpl implements IOHelper {
         try {
             reader =new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
             char[] chars = new char[BUFFER_SIZE];
-            reader.read(chars);
-            int i = 0;
-            while (chars[i] != 0) {
-                result += chars[i];
-                i++;
+            int i;
+            while ((i = reader.read(chars)) != -1) {
+                result += new String(chars, 0, i);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -106,11 +108,7 @@ public class IOHelperImpl implements IOHelper {
             outputStreamWriter = new FileWriter(file, append);
             writer = new BufferedWriter(outputStreamWriter);
             byte[] bytes = content.getBytes(encoding);
-            content = "";
-            for (byte oneByte:
-                 bytes) {
-                content += (char)oneByte;
-            }
+            content = new String(bytes);
             if (file.canWrite()) {
                 writer.write(content);
             }
