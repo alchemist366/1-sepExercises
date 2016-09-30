@@ -105,11 +105,9 @@ public class IOHelperImpl implements IOHelper {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), encoding));
-            byte[] bytes = content.getBytes(encoding);
-            content = new String(bytes);
-            if (file.canWrite()) {
-                writer.write(content);
-            }
+
+            writer.write(content);
+
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
