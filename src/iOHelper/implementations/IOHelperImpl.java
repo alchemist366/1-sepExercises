@@ -15,7 +15,7 @@ public class IOHelperImpl implements IOHelper {
             BufferedInputStream bin = new BufferedInputStream(in);
             BufferedOutputStream bout = new BufferedOutputStream(out);
             byte[] buffer = new byte[BUFFER_SIZE];
-            long i , result = 0l;
+            long i, result = 0l;
             while ((i = (long) bin.read(buffer)) != -1) {
                 bout.write(buffer);
                 result += i;
@@ -33,7 +33,7 @@ public class IOHelperImpl implements IOHelper {
             inStream = new FileInputStream(source);
             outStream = new FileOutputStream(target);
             byte[] buffer = new byte[BUFFER_SIZE];
-            long i , result = 0l;
+            long i, result = 0l;
             while ((i = (long) inStream.read(buffer)) != -1) {
                 outStream.write(buffer);
                 result += i;
@@ -80,7 +80,7 @@ public class IOHelperImpl implements IOHelper {
         String result = "";
         BufferedReader reader = null;
         try {
-            reader =new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
             char[] chars = new char[BUFFER_SIZE];
             int i;
             while ((i = reader.read(chars)) != -1) {
@@ -102,11 +102,9 @@ public class IOHelperImpl implements IOHelper {
     }
 
     public void writeFile(File file, String content, String encoding, boolean append) {
-        OutputStreamWriter outputStreamWriter = null;
         BufferedWriter writer = null;
         try {
-            outputStreamWriter = new FileWriter(file, append);
-            writer = new BufferedWriter(outputStreamWriter);
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), encoding));
             byte[] bytes = content.getBytes(encoding);
             content = new String(bytes);
             if (file.canWrite()) {
@@ -117,12 +115,11 @@ public class IOHelperImpl implements IOHelper {
             e.printStackTrace();
         } finally {
             try {
-                outputStreamWriter.close();
+                if (writer != null) {
+                    writer.close();
+                }
             } catch (IOException e) {
-            }
-            try {
-                writer.close();
-            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
